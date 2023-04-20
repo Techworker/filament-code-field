@@ -24,7 +24,7 @@ trait Autocompletion
         }
 
         if ($autocompletionList instanceof Arrayable) {
-            $autocompletionList = $options->toArray();
+            $autocompletionList = $autocompletionList->toArray();
         }
 
         return $autocompletionList;
