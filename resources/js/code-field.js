@@ -22,7 +22,8 @@ export default (Alpine) => {
         language,
         disabled,
         withLineNumbers,
-        withAutocompletion
+        withAutocompletion,
+        autocompletionList,
     }) => {
         return {
             state,
@@ -82,7 +83,17 @@ export default (Alpine) => {
                 }
 
                 if (withAutocompletion) {
-                    extensions.push(autocompletion());
+                    function filamentCompletions(context) {
+                        let word = context.matchBefore(/\w*/)
+                        if (word.from === word.to && !context.explicit)
+                            return null
+                        return {
+                            from: word.from,
+                            options: autocompletionList
+                        }
+                    }
+
+                    extensions.push(autocompletion({override: [filamentCompletions]}));
                 }
 
                 if (withLineNumbers) {
