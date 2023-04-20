@@ -5,7 +5,7 @@ namespace Creagia\FilamentCodeField\Concerns;
 trait Autocompletion
 {
     public bool $autocompletion = true;
-    public array $autocompleteList = [];
+    public array $autocompletionList = [];
 
     public function disableAutocompletion(): static
     {
@@ -14,13 +14,13 @@ trait Autocompletion
         return $this;
     }
 
-    public function addAutocompleteListItem(array $item) : static {
-        $this->autocompleteList[] = $item;
+    public function addAutocompletionListItem(array $item) : static {
+        $this->autocompletionList[] = $item;
         return $this;
     }
 
-    public function setAutocompleteListItems(array $items) : static {
-        $this->autocompleteList = $items;
+    public function setAutocompletionListItems(array $items) : static {
+        $this->autocompletionList = $items;
         return $this;
     }
 }
