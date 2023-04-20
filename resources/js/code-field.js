@@ -1,17 +1,11 @@
 import { EditorView } from "codemirror"
-import { indentWithTab } from '@codemirror/commands';
-import { keymap, lineNumbers } from '@codemirror/view';
+import { lineNumbers } from '@codemirror/view';
 import { Compartment } from '@codemirror/state';
-import { php } from "@codemirror/lang-php"
-import { javascript } from "@codemirror/lang-javascript"
-import { json } from "@codemirror/lang-json"
-import { html } from "@codemirror/lang-html"
-import { css } from '@codemirror/lang-css';
-import { xml } from "@codemirror/lang-xml"
-import { sql } from "@codemirror/lang-sql"
 import { autocompletion } from '@codemirror/autocomplete';
 import darkTheme from './themes/dark'
 import lightTheme from './themes/light'
+import {StreamLanguage} from "@codemirror/language"
+import {variable} from "./variable"
 
 let theme = new Compartment
 
@@ -19,7 +13,6 @@ export default (Alpine) => {
     Alpine.data('filamentCodeField', ({
         state,
         displayMode,
-        language,
         disabled,
         withLineNumbers,
         withAutocompletion,
@@ -28,12 +21,11 @@ export default (Alpine) => {
         return {
             state,
             codeMirror: null,
-            parsers: { php, javascript, json, html, css, xml, sql },
             init() {
                 this.codeMirror = new EditorView({
                     doc: this.state,
                     extensions: this.buildExtensionsArray(),
-                    parent: this.$refs.codeBlock
+                    parent: this.$refs.codeBlock,
                 })
 
                 if (displayMode) {
@@ -65,8 +57,6 @@ export default (Alpine) => {
                         : true
 
                 let extensions = [
-                    this.parsers[language](),
-                    keymap.of([indentWithTab]),
                     theme.of(lightMode ? lightTheme : darkTheme),
                     EditorView.contentAttributes.of({
                         contenteditable: !disabled && !displayMode
@@ -99,6 +89,8 @@ export default (Alpine) => {
                 if (withLineNumbers) {
                     extensions.push(lineNumbers());
                 }
+
+                extensions.push(StreamLanguage.define(variable));
 
                 return extensions;
             }
