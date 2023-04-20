@@ -24,7 +24,7 @@
         disabled: {{ $isDisabled() ? 1 : 0 }},
         withLineNumbers: {{ $lineNumbers ? 1 : 0 }},
         withAutocompletion: {{ $autocompletion ? 1 : 0 }},
-        autocompletionList: {{ json_encode($autocompletionList) }}
+        autocompletionList: {{ json_encode($getAutocompletionList()) }}
     })">
         <div wire:ignore
              x-ref="codeBlock"
