@@ -23,18 +23,6 @@ function tokenBase(stream, state) {
         stream.next();
         return null;
     }
-    if (ch === '\'' || ch === '"' || ch === '`') {
-        state.tokens.unshift(tokenString(ch, ch === "`" ? "quote" : "string"));
-        return tokenize(stream, state);
-    }
-    if (ch === '#') {
-        if (sol && stream.eat('!')) {
-            stream.skipToEnd();
-            return 'meta'; // 'comment'?
-        }
-        stream.skipToEnd();
-        return 'comment';
-    }
     if (ch === '$') {
         state.tokens.unshift(tokenDollar);
         return tokenize(stream, state);
@@ -42,28 +30,6 @@ function tokenBase(stream, state) {
     if (ch === '{') {
         state.tokens.unshift(tokenVariable);
         return tokenize(stream, state);
-    }
-    if (ch === '+' || ch === '=') {
-        return 'operator';
-    }
-    if (ch === '-') {
-        stream.eat('-');
-        stream.eatWhile(/\w/);
-        return 'attribute';
-    }
-    if (ch == "<") {
-        if (stream.match("<<")) return "operator"
-        var heredoc = stream.match(/^<-?\s*['"]?([^'"]*)['"]?/)
-        if (heredoc) {
-            state.tokens.unshift(tokenHeredoc(heredoc[1]))
-            return 'string.special'
-        }
-    }
-    if (/\d/.test(ch)) {
-        stream.eatWhile(/\d/);
-        if(stream.eol() || !/\w/.test(stream.peek())) {
-            return 'number';
-        }
     }
     stream.eatWhile(/[\w-]/);
     var cur = stream.current();
